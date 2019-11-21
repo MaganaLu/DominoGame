@@ -85,141 +85,168 @@ public:
 
 };
 
-
-class CTable{
-};
 class CPlayer{
-};
-
-
-
-
-int main() {
-    CDominoes cdominoes;
-    CRandom random;
-
-    string playerName;
-    string dominoChain;
-    string starterTile;
-    string answer;
-    bool finished = false;
-
+public:
     player_data *player = new player_data[2];
+    void playerStuff() {
+        CDominoes cdominoes;
+        CRandom random;
 
-    for (int i = 0; i < 2; i++) {
-        cout << "Enter name for player: ";
-        cin >> playerName;
-        player[i].name = playerName;
+        string playerName;
+        string dominoChain;
+        string starterTile;
+        string answer;
+        bool finished = false;
+
+        //player_data *player = new player_data[2];
+
+        for (int i = 0; i < 2; i++) {
+            cout << "Enter name for player: ";
+            cin >> playerName;
+            player[i].name = playerName;
+        }
+
     }
 
-    cdominoes.divideDominoes(player);
 
-    dominoChain = cdominoes.getStarter();
-
-    while (finished == false) {
-        for (int i = 0; i < 2; i++) {
-            int counter = 0;
-            char firstCharInChain = dominoChain.at(0);
-            char lastCharInChain = dominoChain.back();
-
-            cout << "Domino chain: " << dominoChain << endl;
-
-            cout << "player: " << player[i].name<< endl;
-
-            for (auto printthing : player[i].inHand) {
-                // process i
-                cout << "[" << printthing << "]"; // this will print all the contents of *features*
-            }
-            cout << endl;
-
-            vector<string> inHandCopy;
-
-            for(string answer : player[i].inHand){
-
-                inHandCopy = player[i].inHand;
+};
 
 
-                if (answer.at(0) == firstCharInChain || answer.at(0) == lastCharInChain) {
-                    if (answer.at(0) == lastCharInChain) {
-                        //add it to the domino chain
-                        dominoChain.append(answer);
-                        //delete it from the players in hand vector
-                        inHandCopy.erase(remove(inHandCopy.begin(), inHandCopy.end(), answer),
-                                               inHandCopy.end());
+class CTable{
 
-                    }
-                    else if (answer.at(0) == firstCharInChain) {
-                        reverse(begin(answer), end(answer));
-                        //add it to the domino chain at the beginning
-                        dominoChain.insert(0, answer);
-                        //delete it from the players inHand
-                        reverse(begin(answer), end(answer));
-                        inHandCopy.erase(remove(inHandCopy.begin(), inHandCopy.end(), answer),
-                                         inHandCopy.end());
+public:
+    void playingtable(){
+        CPlayer cp;
+        cp.playerStuff();
+        CDominoes cdominoes;
+        CRandom random;
 
-                    }
+        string dominoChain;
+        string starterTile;
+        string answer;
+        bool finished = false;
 
+        cdominoes.divideDominoes(cp.player);
 
+        dominoChain = cdominoes.getStarter();
+        while (!finished) {
+            for (int i = 0; i < 2; i++) {
+                int counter = 0;
+                char firstCharInChain = dominoChain.at(0);
+                char lastCharInChain = dominoChain.back();
+
+                cout << "Domino chain: " << dominoChain << endl;
+
+                cout << "player: " << cp.player[i].name<< endl;
+
+                for (const auto& printthing : cp.player[i].inHand) {
+                    // process i
+                    cout << "[" << printthing << "]"; // this will print all the contents of *features*
                 }
+                cout << endl;
 
-                else if (answer.back() == firstCharInChain || answer.back() == lastCharInChain) {
-                    if (answer.back() == firstCharInChain) {
+                vector<string> inHandCopy;
 
-                        //append tot he front of the chain
-                        dominoChain.insert(0, answer);
+                for(string answer : cp.player[i].inHand){
 
-                        // delete from the player InHand
-                        inHandCopy.erase(remove(inHandCopy.begin(),inHandCopy.end(), answer),
-                                               inHandCopy.end());
-
-                    }
-                    if (answer.back() == lastCharInChain) {
-                        //reverse();
-                        reverse(begin(answer), end(answer));
-                        dominoChain.append(answer);
+                    inHandCopy = cp.player[i].inHand;
 
 
-                        reverse(begin(answer), end(answer));
-                        //delete it from player inHand
-                        inHandCopy.erase(remove(inHandCopy.begin(), inHandCopy.end(), answer),
-                                               inHandCopy.end());
+                    if (answer.at(0) == firstCharInChain || answer.at(0) == lastCharInChain) {
+                        if (answer.at(0) == lastCharInChain) {
+                            //add it to the domino chain
+                            dominoChain.append(answer);
+                            //delete it from the players in hand vector
+                            inHandCopy.erase(remove(inHandCopy.begin(), inHandCopy.end(), answer),
+                                             inHandCopy.end());
 
-                    }
+                        }
+                        else if (answer.at(0) == firstCharInChain) {
+                            reverse(begin(answer), end(answer));
+                            //add it to the domino chain at the beginning
+                            dominoChain.insert(0, answer);
+                            //delete it from the players inHand
+                            reverse(begin(answer), end(answer));
+                            inHandCopy.erase(remove(inHandCopy.begin(), inHandCopy.end(), answer),
+                                             inHandCopy.end());
 
-                }else{
-
-                    counter++;
-                    if(counter == inHandCopy.size()){
-
-                        if(cdominoes.allDominoes.size() == 0){
-                            cout << "Player: " << player[i].name << " lost!!!";
-                            finished = true;
                         }
 
-                        CRandom random;
-                        int index = random.getRandomPublic(0,cdominoes.allDominoes.size());
-                        string domino = cdominoes.allDominoes.at(index);
 
-                        inHandCopy.insert(inHandCopy.begin(), domino);
-                        cdominoes.allDominoes.erase(cdominoes.allDominoes.begin() + index);
                     }
 
-                }
+                    else if (answer.back() == firstCharInChain || answer.back() == lastCharInChain) {
+                        if (answer.back() == firstCharInChain) {
 
-                if (inHandCopy.size() == 0){
-                    cout << "domino chain: " << dominoChain << endl;
-                    cout << player[i].name <<" is the winner";
-                    exit(0); // temporary cause i cant figure out how to exit both loops and exit whole program.
-                    finished = true;
-                }
+                            //append tot he front of the chain
+                            dominoChain.insert(0, answer);
 
-                player[i].inHand = inHandCopy;
+                            // delete from the player InHand
+                            inHandCopy.erase(remove(inHandCopy.begin(),inHandCopy.end(), answer),
+                                             inHandCopy.end());
 
-                if(answer.at(0) == firstCharInChain || answer.at(0) == lastCharInChain || answer.back() == firstCharInChain || answer.back() == lastCharInChain){
-                    break;
+                        }
+                        if (answer.back() == lastCharInChain) {
+                            //reverse();
+                            reverse(begin(answer), end(answer));
+                            dominoChain.append(answer);
+
+                            reverse(begin(answer), end(answer));
+                            //delete it from player inHand
+                            inHandCopy.erase(remove(inHandCopy.begin(), inHandCopy.end(), answer),
+                                             inHandCopy.end());
+
+                        }
+
+                    }else{
+
+                        counter++;
+                        if(counter == inHandCopy.size()){
+
+                            if(cdominoes.allDominoes.size() == 0){
+                                cout << "Player: " << cp.player[i].name << " lost!!!";
+                                finished = true;
+                            }
+
+                            CRandom random;
+                            int index = random.getRandomPublic(0,cdominoes.allDominoes.size());
+                            string domino = cdominoes.allDominoes.at(index);
+
+                            inHandCopy.insert(inHandCopy.begin(), domino);
+                            cdominoes.allDominoes.erase(cdominoes.allDominoes.begin() + index);
+                        }
+
+                    }
+
+                    if (cp.player[1].inHand.size() == 0 || cp.player[0].inHand.size() == 0){
+                            finished = true;
+                            cout <<" ---GAME OVER--- " << endl;
+
+                            if(cp.player[0].inHand.size() == 0){
+                                cout<<cp.player[0].name << " Won!!!" << endl;
+                                cout << "The domino chain is: "<<dominoChain ;
+                                break;
+                            }
+                        if(cp.player[1].inHand.size() == 0){
+                            cout<<cp.player[1].name << " Won!!!"<< endl;
+                            cout << "The domino chain is: "<<dominoChain ;
+                            break;
+                        }
+                    }
+                    cp.player[i].inHand = inHandCopy;
+
+                    if(answer.at(0) == firstCharInChain || answer.at(0) == lastCharInChain || answer.back() == firstCharInChain || answer.back() == lastCharInChain){
+                        break;
+                    }
                 }
             }
         }
     }
+};
+
+int main() {
+
+    CTable game;
+    game.playingtable();
     return 0;
 }
